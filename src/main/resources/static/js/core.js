@@ -39,7 +39,8 @@ var Core = (function () {
             exportDataType: "basic", //basic', 'all', 'selected'.
             escape: true,//html转意
             onLoadSuccess: tableLoadSuccess,
-            onEditableSave: tableEditRowElem
+            onEditableSave: tableEditRowElem,
+            onExpandRow : tableLoadSubTable
         }
     };
     /*ajax请求*/
@@ -152,7 +153,8 @@ var Core = (function () {
                                               //            align: "center",
                                               columns: tableOptions.columns,//表格列
                                               onLoadSuccess: tableOptions.onLoadSuccess,
-                                              onEditableSave: tableOptions.onEditableSave
+                                              onEditableSave: tableOptions.onEditableSave,
+                                              onExpandRow : tableOptions.onExpandRow
                                           });
     }
     function queryInitParams(params) {
@@ -171,6 +173,9 @@ var Core = (function () {
     }
 
     function tableEditRowElem(data){
+    }
+    function tableLoadSubTable(data){
+
     }
 
     /*刷新表格 ：flag-是否跳转到当前页。默认首页*/
@@ -396,6 +401,53 @@ var Core = (function () {
     core.isJsonObject = function (obj) {
         var isjson = typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
         return isjson;
+    }
+
+    core.initTableByElem = function (elem , options) {
+        console.log("<---------------->" + options);
+        var tableOptions = $.extend({}, coreOptions.tableOptions, options);
+        console.log(tableOptions);
+        $(elem).bootstrapTable({
+            url: tableOptions.url, //请求后台的URL（*）
+            contentType: tableOptions.contentType, //用post请求，这个是必须条件，必须加上，get可以不用，亲测
+            dataType: tableOptions.dataType,
+            method: tableOptions.method, //请求方式（*）
+            //            toolbar: '#toolbar',        //工具按钮用哪个容器
+            undefinedText: tableOptions.undefinedText, /*为undefiend时显示的字*/
+            striped: tableOptions.striped, //是否显示行间隔色
+            cache: tableOptions.cache, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: tableOptions.pagination, //是否显示分页（*）
+            sortable: tableOptions.sortable, //是否启用排序
+            sortOrder: tableOptions.sortOrder, //排序方式
+            sortName: tableOptions.sortName, //排序方式
+            toolbar: tableOptions.toolbar,
+            //            search: true,             //是否使用客户端搜索
+            queryParams: tableOptions.queryParams,//传递参数（*）
+            responseHandler: tableOptions.responseHandler,
+            queryParamsType: tableOptions.queryParamsType,
+            sidePagination: tableOptions.sidePagination, //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: tableOptions.pageNumber, //初始化加载第一页，默认第一页
+            pageSize: tableOptions.pageSize, //每页的记录行数（*）
+            pageList: tableOptions.pageList, //可供选择的每页的行数（*）
+            showColumns: tableOptions.showColumns, //是否显示所有的列
+            showRefresh: tableOptions.showRefresh, //是否显示刷新按钮
+            minimumCountColumns: tableOptions.minimumCountColumns, //最少允许的列数
+            clickToSelect: tableOptions.clickToSelect, //是否启用点击选中行
+            strictSearch: tableOptions.strictSearch,
+            //            height: 460,            //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            showToggle: tableOptions.showToggle, //是否显示详细视图和列表视图的切换按钮
+            uniqueId: tableOptions.uniqueId, //每一行的唯一标识，一般为主键列
+            cardView: tableOptions.cardView, //是否显示详细视图
+            detailView: tableOptions.detailView, //是否显示父子表
+            showExport: tableOptions.showExport, //是否显示导出
+            exportDataType: tableOptions.exportDataType, //basic', 'all', 'selected'.
+            escape: tableOptions.escape,//html转意
+            //            align: "center",
+            columns: tableOptions.columns,//表格列
+            onLoadSuccess: tableOptions.onLoadSuccess,
+            onEditableSave: tableOptions.onEditableSave,
+            onExpandRow : tableOptions.onExpandRow
+        });
     }
 
 

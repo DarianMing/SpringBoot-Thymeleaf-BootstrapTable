@@ -9,6 +9,11 @@
     <script th:src="@{/libs/bootstrap/bootstrap.min.js}"></script>
     <script th:src="@{/libs/bootstrap-table/bootstrap-table.js}"></script>
     <script th:src="@{/libs/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+    <script th:src="@{/libs/tableExport/tableExport.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/export/bootstrap-table-export.js}"></script>
+    <script th:src="@{/libs/tableExport/libs/js-xlsx/xlsx.core.min.js}"></script>
+    <script th:src="@{/libs/tableExport/libs/jsPDF/jspdf.min.js}"></script>
+    <script th:src="@{/libs/tableExport/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js}"></script>
     <script th:src="@{/js/core.js}"></script>
 </head>
 <body>
@@ -34,7 +39,7 @@
             </form>
         </div>
     </div>
-    <div id="toolbar" class="btn-group">
+    <div id="toolbar" class="btn-group" style="display: inline-block">
         <button id="btn_add" type="button" class="btn btn-default">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
         </button>
@@ -45,10 +50,16 @@
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
         </button>
     </div>
+    <div style="display: inline-block">
+        <select class="form-control" id="select_export_type">
+            <option value="all" selected="selected">导出本页</option>
+            <option value="selected">导出选中</option>
+        </select>
+    </div>
     <table id="tb_departments"></table>
 </div>
 <script>
-
+    var exportFlag = "true"; //配置导出权限
     var columns = [{
         checkbox: true
     }, {
@@ -64,7 +75,7 @@
         title: '部门级别',
         align: "center"
     }, {
-        field: 'desc',
+        field: 'remark',
         title: '描述',
         align: "center"
     }];
@@ -76,7 +87,17 @@
         toolbar: '#toolbar',
         showRefresh: true,
         showColumns:true,
-        detailView: true,//父子表
+        detailView: false,//父子表
+        showExport : exportFlag == "true" ,
+        exportDataType : exportFlag == "true" ? $("#select_export_type").val() : "all",
+        exportTypes: ['xlsx' , 'doc', 'pdf'], //可选的导出文件类型
+        exportOptions:{
+            ignoreColumn: [0],  //忽略某一列的索引
+            fileName: '购买记录表',  //文件名称设置
+            worksheetName: 'sheet1',  //表格工作区名称
+            tableName: '购买记录表',
+            excelstyles: ['background-color', 'color', 'font-size', 'font-weight']
+        },
         queryParams : queryParams,
         //注册加载子表的事件。注意下这里的三个参数！
         onExpandRow: function (index, row, $detail) {
@@ -101,7 +122,7 @@
         toolbar: '#toolbar',
         showRefresh: true,
         showColumns:true,
-        detailView: true,//父子表
+        detailView: false,//父子表
         //注册加载子表的事件。注意下这里的三个参数！
         onExpandRow: function (index, row, $detail) {
             createSubTable(index , row , $detail)
@@ -121,7 +142,11 @@
     }
 
     $(function () {
-        console.log("test");
+        $("#select_export_type").change(function(){
+            var type = $("#select_export_type").val();
+            Core.selectExportType("#tb_departments" ,type );
+        });
+
         $("#btn_query").click(function () {
             Core.refreshTableData("#tb_departments");
         });

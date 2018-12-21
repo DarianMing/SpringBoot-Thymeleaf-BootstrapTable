@@ -35,9 +35,20 @@ var Core = (function () {
             showToggle: false, //是否显示详细视图和列表视图的切换按钮
             cardView: false, //是否显示详细视图
             detailView: false, //是否显示父子表
-            showExport: false, //是否显示导出
-            exportDataType: "basic", //basic', 'all', 'selected'.
             escape: true,//html转意
+            exportDataType: "all",
+            showExport: false,  //是否显示导出按钮
+            buttonsAlign:"right",  //按钮位置
+            exportTypes: ['json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf'], //可选的导出文件类型
+            Icons:'glyphicon-export',
+            exportOptions:{
+                ignoreColumn: [],  //忽略某一列的索引
+                fileName: '导出表',  //文件名称设置
+                worksheetName: 'sheet1',  //表格工作区名称
+                tableName: '导出表',
+                excelstyles: ['background-color', 'color', 'font-size', 'font-weight'],
+                onMsoNumberFormat: DoOnMsoNumberFormat
+            },
             onLoadSuccess: tableLoadSuccess,
             onEditableSave: tableEditRowElem,
             onExpandRow : tableLoadSubTable
@@ -152,6 +163,18 @@ var Core = (function () {
                                               escape: tableOptions.escape,//html转意
                                               //            align: "center",
                                               columns: tableOptions.columns,//表格列
+                                              // //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                              buttonsAlign:tableOptions.buttonsAlign,  //按钮位置
+                                              exportTypes: tableOptions.exportTypes, //可选的导出文件类型
+                                              Icons:tableOptions.Icons,
+                                              exportOptions:{
+                                                  ignoreColumn: tableOptions.exportOptions.ignoreColumn,  //忽略某一列的索引
+                                                  fileName: tableOptions.exportOptions.fileName, //文件名称设置
+                                                  worksheetName:  tableOptions.exportOptions.worksheetName,  //表格工作区名称
+                                                  tableName: tableOptions.exportOptions.tableName,
+                                                  excelstyles: tableOptions.exportOptions.excelstyles,
+                                                  onMsoNumberFormat: DoOnMsoNumberFormat
+                                              },
                                               onLoadSuccess: tableOptions.onLoadSuccess,
                                               onEditableSave: tableOptions.onEditableSave,
                                               onExpandRow : tableOptions.onExpandRow
@@ -178,6 +201,14 @@ var Core = (function () {
 
     }
 
+    function DoOnMsoNumberFormat(cell, row, col) {
+        var result = "";
+        if (row > 0 && col == 0)
+            result = "\\@";
+        return result;
+    }
+
+
     /*刷新表格 ：flag-是否跳转到当前页。默认首页*/
     core.refreshTable = function (id, flag) {
         if (flag) {
@@ -197,6 +228,10 @@ var Core = (function () {
             $(id).bootstrapTable("refreshOptions", {"pageNumber": 1});
         }
     }
+
+    core.selectExportType = function (id , exportType) {
+        $(id).bootstrapTable("refreshOptions" , {"exportDataType": exportType});
+    };
 
     /*根据data选中数据*/
     core.checkTableBy=function (id,data) {
@@ -444,6 +479,18 @@ var Core = (function () {
             escape: tableOptions.escape,//html转意
             //            align: "center",
             columns: tableOptions.columns,//表格列
+            //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            buttonsAlign:tableOptions.buttonsAlign,  //按钮位置
+            exportTypes: tableOptions.exportTypes, //可选的导出文件类型
+            Icons:tableOptions.Icons,
+            exportOptions:{
+               ignoreColumn: tableOptions.exportOptions.ignoreColumn,  //忽略某一列的索引
+               fileName: tableOptions.exportOptions.fileName, //文件名称设置
+               worksheetName:  tableOptions.exportOptions.worksheetName,  //表格工作区名称
+               tableName: tableOptions.exportOptions.tableName,
+               excelstyles: tableOptions.exportOptions.excelstyles,
+               onMsoNumberFormat: DoOnMsoNumberFormat
+            },
             onLoadSuccess: tableOptions.onLoadSuccess,
             onEditableSave: tableOptions.onEditableSave,
             onExpandRow : tableOptions.onExpandRow

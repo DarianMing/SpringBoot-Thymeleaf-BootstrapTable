@@ -6,7 +6,7 @@ spring:
     name: SpringBoot-Thymeleaf-BootstrapTable
   datasource:
     druid:
-      url: jdbc:mysql://127.0.0.1:3306/li?characterEncoding=UTF-8&amp;autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://127.0.0.1:3306/st_mybatis?characterEncoding=UTF-8&amp;autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull
       driver-class-name: com.mysql.jdbc.Driver
       username: root
       password: 245220

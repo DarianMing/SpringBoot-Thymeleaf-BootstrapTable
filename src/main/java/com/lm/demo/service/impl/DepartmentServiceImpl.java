@@ -21,6 +21,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public int updateByPrimaryKeySelective(DepartmentEntity record) {
+        return departmentEntityMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
     public List<DepartmentEntity> selectDepartments(DepartmentEntity departmentEntity) {
         return departmentEntityMapper.selectDepartments(departmentEntity);
     }

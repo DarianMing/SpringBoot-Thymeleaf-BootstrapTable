@@ -8,5 +8,7 @@ public interface DepartmentService {
 
     int insert(DepartmentEntity record);
 
+    int updateByPrimaryKeySelective(DepartmentEntity record);
+
     List<DepartmentEntity> selectDepartments (DepartmentEntity departmentEntity);
 }

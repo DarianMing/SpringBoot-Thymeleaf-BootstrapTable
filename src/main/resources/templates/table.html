@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/libs/bootstrap/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/libs/bootstrap-table/bootstrap-table.css}"/>
     <link rel="stylesheet" th:href="@{/libs/bootstrap3-editable/css/bootstrap-editable.css}"/>
+    <link rel="stylesheet" th:href="@{/libs/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.css}"/>
     <script th:src="@{/libs/jquery/jquery.min.js}"></script>
     <script th:src="@{/libs/bootstrap/bootstrap.min.js}"></script>
     <script th:src="@{/libs/bootstrap-table/bootstrap-table.js}"></script>
@@ -18,6 +19,7 @@
     <!--<script th:src="@{/libs/tableExport/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js}"></script>--><!--不支持中文，可调优-->
     <script th:src="@{/libs/bootstrap3-editable/js/bootstrap-editable.js}"></script>
     <script th:src="@{/libs/bootstrap-table/extensions/editable/bootstrap-table-editable.js}"></script>
+    <script th:src="@{/libs/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.js}"></script>
     <script th:src="@{/js/core.js}"></script>
 </head>
 <body>
@@ -60,47 +62,62 @@
             <option value="selected">导出选中</option>
         </select>
     </div>
-    <table id="tb_departments"></table>
+    <table id="mergeTable">
+    <thead>
+        <tr>
+            <th colspan="2" data-valign="middle" data-align="center">基本信息</th>
+            <th colspan="2" data-valign="middle" data-align="center">基本信息</th>
+        </tr>
+        <tr>
+            <th data-field="id" data-align="center">部门ID</th>
+            <th data-field="name" data-align="center">部门名称</th>
+            <th data-field="level" data-align="center">部门级别</th>
+            <th data-field="remark"  data-align="center">描述</th>
+        </tr>
+    </thead>
+    </table>
 </div>
 <script>
     var exportFlag = "true"; //配置导出权限
-    var columns = [{
-        checkbox: true
-    }, {
-        field: 'id',
-        title: '部门ID',
-        align: "center"
-    }, {
-        field: 'name',
-        title: '部门名称',
-        align: "center",
-        editable: {
-            type: 'text',
-            title: '编辑顺序',
-            validate: function (v) {
-                if ( !v ) return '序号不能为空';
-                // if ( isNaN(v)) return '序号必须是数字';
-                // if ( parseInt(v) <= 0 ) return '序号必须是正整数';
-            }
-        }
-    }, {
-        field: 'level',
-        title: '部门级别',
-        align: "center"
-    }, {
-        field: 'remark',
-        title: '描述',
-        align: "center"
-    }];
+    // var columns = [{
+    //     checkbox: true
+    // }, {
+    //     field: 'id',
+    //     title: '部门ID',
+    //     align: "center"
+    // }, {
+    //     field: 'name',
+    //     title: '部门名称',
+    //     align: "center",
+    //     editable: {
+    //         type: 'text',
+    //         title: '编辑顺序',
+    //         validate: function (v) {
+    //             if ( !v ) return '序号不能为空';
+    //             // if ( isNaN(v)) return '序号必须是数字';
+    //             // if ( parseInt(v) <= 0 ) return '序号必须是正整数';
+    //         }
+    //     }
+    // }, {
+    //     field: 'level',
+    //     title: '部门级别',
+    //     align: "center"
+    // }, {
+    //     field: 'remark',
+    //     title: '描述',
+    //     align: "center"
+    // }];
 
     var options={
-        id:"#tb_departments",
+        id:"#mergeTable",
         url: '/render/getData',
-        columns:columns,
+        method: "post",
+        // columns:columns,
         toolbar: '#toolbar',
         showRefresh: true,
         showColumns:true,
         detailView: false,//父子表
+        clickToSelect : true,
         showExport : exportFlag == "true" ,
         exportDataType : exportFlag == "true" ? $("#select_export_type").val() : "all",
         exportTypes: ['xlsx' , 'doc', 'pdf'], //可选的导出文件类型
@@ -145,7 +162,7 @@
                    dataType: 'JSON',
                    success: function (data) {
                        if(data.code==200){
-                           Core.refreshTableData("#tb_departments");
+                           Core.refreshTableData("#mergeTable");
                        }
                        layer.msg(data.msg);
                    },
@@ -170,7 +187,7 @@
 
     var subOptions = {
         url: '/render/getData',
-        columns:columns,
+        // columns:columns,
         toolbar: '#toolbar',
         showRefresh: true,
         showColumns:true,
@@ -196,11 +213,11 @@
     $(function () {
         $("#select_export_type").change(function(){
             var type = $("#select_export_type").val();
-            Core.selectExportType("#tb_departments" ,type );
+            Core.selectExportType("#mergeTable" ,type );
         });
 
         $("#btn_query").click(function () {
-            Core.refreshTableData("#tb_departments");
+            Core.refreshTableData("#mergeTable");
         });
     });
 </script>

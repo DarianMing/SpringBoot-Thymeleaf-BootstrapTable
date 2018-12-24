@@ -51,7 +51,8 @@ var Core = (function () {
             },
             onLoadSuccess: tableLoadSuccess,
             onEditableSave: tableEditRowElem,
-            onExpandRow : tableLoadSubTable
+            onExpandRow : tableLoadSubTable,
+            rowStyle : rowStyleFunc
         }
     };
     /*ajax请求*/
@@ -177,7 +178,8 @@ var Core = (function () {
                                               },
                                               onLoadSuccess: tableOptions.onLoadSuccess,
                                               onEditableSave: tableOptions.onEditableSave,
-                                              onExpandRow : tableOptions.onExpandRow
+                                              onExpandRow : tableOptions.onExpandRow,
+                                              rowStyle : tableOptions.rowStyle
                                           });
     }
     function queryInitParams(params) {
@@ -199,6 +201,10 @@ var Core = (function () {
     }
     function tableLoadSubTable(data){
 
+    }
+    
+    function rowStyleFunc(data) {
+        
     }
 
     function DoOnMsoNumberFormat(cell, row, col) {

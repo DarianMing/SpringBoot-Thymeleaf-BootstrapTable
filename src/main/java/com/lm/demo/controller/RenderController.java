@@ -2,6 +2,7 @@ package com.lm.demo.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.lm.demo.dto.ResponseVo;
 import com.lm.demo.model.DepartmentEntity;
 import com.lm.demo.service.DepartmentService;
 import com.lm.demo.util.PageResult;
@@ -29,6 +30,24 @@ public class RenderController {
         List<DepartmentEntity> departmentEntityList = departmentService.selectDepartments(departmentEntity);
         PageInfo<DepartmentEntity> pages = new PageInfo<>(departmentEntityList);
         return new PageResult<DepartmentEntity>().setRows(departmentEntityList).setTotal(pages.getTotal());
+    }
+
+    @PostMapping("/edit")
+    @ResponseBody
+    public ResponseVo edit (DepartmentEntity departmentEntity) {
+        int editFlag = departmentService.updateByPrimaryKeySelective(departmentEntity);
+        ResponseVo response = new ResponseVo();
+        return editFlag > 0 ? response.setCode(200).setMsg("编辑成功") : response.setCode(500).setMsg("编辑失败");
+    }
+
+    @GetMapping("/table")
+    public String table (DepartmentEntity departmentEntity) {
+        return "table";
+    }
+
+    @GetMapping("/tableFilter")
+    public String tableFilter () {
+        return "tableFilter";
     }
 
 //    @PostMapping("/getSubData")
